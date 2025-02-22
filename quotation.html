@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <head>
+        <title>Eeshwarwoodcrafft : Quotation & Invoice Generator</title>
+        <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>-->
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"
+            integrity="sha512-V/C9Axb8EEL4ix79ERIJmpRd6Mp1rWVSxa2PIBCdCxqhEsfCBWp/R0xJ4U495czhcuDWrGOFYo8+QI3lJ9DK5g=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
+
+
+
+    </head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+        }
+
+        label,
+        textarea,
+        input,
+        select {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 7px;
+            /* background-color: green; */
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 10px;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            width: 100%;
+            border: 1px solid black;
+            padding: 9px;
+            text-align: center;
+        }
+
+        .terms {
+            color: red;
+            text-align: left;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .flex-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .box {
+            width: 48%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2 id="docTitle">Quotation & Invoice Generator</h2>
+        <!-- for bootstrao  <div class="mb-3 row">
+        <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
+        <div class="col-sm-10">
+        <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="email@example.com">
+        </div>
+        </div>
+        <div class="mb-3 row">
+        <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+        <div class="col-sm-10">
+        <input type="password" class="form-control" id="inputPassword">
+        </div>
+        </div> -->
+
+        <label>Select Document Type:</label>
+        <select id="docType" onchange="updateTitle()">
+            <option value="Quotation">Quotation</option>
+            <option value="Invoice">Invoice</option>
+        </select>
+
+        <div class="flex-container">
+            <div class="box">
+                <label>Client Details (Recipient):</label>
+                <input type="text" class="c_name" id="c_name" placeholder="Client name" value="Demo name" required>
+                <input type="text" class="c_mobile" id="c_mobile" placeholder="Client Mobile no." value="+91 9898989898"
+                    required>
+                <input type="text" class="c_email" id="c_email" placeholder="Client email" value="demo@gmailcom">
+                <textarea id="clientCompany" rows="3" placeholder="Client Address">
+Plot no:12,
+Center park part-2,
+Block -b,Sohana,
+(Haryana), 122102
+                </textarea>
+            </div>
+
+            <div class="box">
+                <label>Sender Details (EashwarWoodCraft.in):</label>
+                <input type="text" class="o_name" id="o_name" placeholder="Sender name" value="EashwarWoodCraft">
+                <input type="text" class="o_mobile" id="o_mobile" placeholder="Sender Mobile no."
+                    value="+91 9871620619">
+                <input type="text" class="o_email" id="o_email" placeholder="Sender email"
+                    value="Eashwarwoodcraft@gmail.com">
+                <textarea id="senderCompany" rows="3" placeholder="Sender Address">
+Plot no:11,
+DevNagar part-2,
+Block -b,Gurgaon, 
+(Haryana), 122102
+                </textarea>
+            </div>
+        </div>
+
+        <h3>Products / Services</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Product Name </th>
+                    <th>Description </th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <!-- <th>Tax (%)</th>
+                    <th>Sub total</th> -->
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="itemsTable">
+                <tr>
+                    <td><input type="text" class="product" placeholder="Product" value="Almirah (48*67)"></td>
+                    <td><input type="text" class="description" placeholder="Product Description" value="Per SQFT"></td>
+                    <td><input type="number" class="quantity" placeholder="Qty" value="1"></td>
+                    <td><input type="number" class="price" placeholder="Price" value="1"></td>
+                    <!-- <td><input type="number" class="tax" placeholder="Tax %" value="0"></td>
+                    <td><input type="number" class="product_subtotal" placeholder="Product sub total %" value="0"></td> -->
+                    <td><button onclick="removeItem(this)">❌</button></td>
+                </tr>
+            </tbody>
+        </table>
+        <button onclick="addItem()" style="color: rgb(11, 99, 182);">➕ Add Item</button>
+
+        <label>Terms & Conditions:</label>
+        <textarea id="terms" rows="4" placeholder="Enter terms and conditions here...">
+60% ADVANCE PAYMENT 35% ON MATERIAL DELVERY ON SITE 5% AFTER INTALLATION, WORK WILL BE HANDOVER 30 TO 35 WORKING DAYS
+        </textarea>
+
+        <label>Note:</label>
+        <textarea id="note" rows="4" placeholder="Enter customer note here ...">
+FINISH WITH 18MM CENTURY SAINIK PLAYWOOD WITH LAMINATE, HARDWARE HETTICH SOFTCLOSE HINGS USE,HANDLE NOT INCLUDE, OTHERS CIVIL & OTHER ITEMS WILL BE EXTRA PAYABLE.
+        </textarea>
+
+        <br><br>
+        <button onclick="printInvoice()">🖨️ Print Document</button>
+    </div>
+
+    <script>
+
+        // generate pdf using jspdf
+        function generatePDF(content, label) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Injecting the HTML content into the PDF
+            doc.html(content, {
+                callback: function (doc) {
+                    doc.save(label);
+                },
+                x: 10,
+                y: 10,
+            });
+        }
+
+
+
+        function updateTitle() {
+            const docType = document.getElementById("docType").value;
+            document.getElementById("docTitle").innerText = docType + " Generator";
+        }
+
+        function addItem() {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td><input type="text" class="product" placeholder="Product"></td>
+                <td><input type="text" class="description" placeholder="Product Description"></td>
+                <td><input type="number" class="quantity" placeholder="Qty" value="1"></td>
+                <td><input type="number" class="price" placeholder="Price" value="1"></td>
+                <td><button onclick="removeItem(this)">❌</button></td>
+            `;
+            document.getElementById("itemsTable").appendChild(row);
+        }
+
+        function removeItem(button) {
+            button.parentElement.parentElement.remove();
+        }
+
+        function printInvoice() {
+            const docType = document.getElementById("docType").value;
+            const senderCompany = document.getElementById("senderCompany").value.trim().replace(/\n/g, "<br>") || "EashwarwoodCraft";
+            const clientCompany = document.getElementById("clientCompany").value.trim().replace(/\n/g, "<br>") || "Client Company";
+            const terms = document.getElementById("terms").value.trim().replace(/\n/g, "<br>");
+            const note = document.getElementById("note").value.trim().replace(/\n/g, "<br>");
+
+            const documentType = document.getElementById("docType").value
+            // cleint dynamic variable 
+            const c_name = document.getElementById("c_name").value.trim().replace(/\n/g, "<br>") || "__________";
+            const c_mobile = document.getElementById("c_mobile").value.trim().replace(/\n/g, "<br>") || "________";
+            const c_email = document.getElementById("c_email").value.trim().replace(/\n/g, "<br>") || "__________";
+            // owner dynamic variable
+            const o_email = document.getElementById("o_email").value.trim().replace(/\n/g, "<br>") || "Eeashwarwoodcraft@gmail.com";
+            const o_mobile = document.getElementById("o_mobile").value.trim().replace(/\n/g, "<br>") || "987162019";
+            const o_name = document.getElementById("o_name").value.trim().replace(/\n/g, "<br>") || "EashwarwoodCraft";
+
+            let uniqueNo = Math.floor((Math.random() * 1000) + 1)
+            let date = new Date();
+            let currenDate = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear();
+            let itemsHTML = "";
+            let grandTotal = 0;
+            document.querySelectorAll("#itemsTable tr").forEach(row => {
+                const product = row.querySelector(".product").value.trim();
+                const description = row.querySelector(".description").value.trim();
+                const quantity = row.querySelector(".quantity").value || 1;
+                const price = row.querySelector(".price").value || 0;
+
+                const total = quantity * price
+                grandTotal = grandTotal + total
+                console.log("product name is", product, " its total is ", total)
+                console.log("grnd otald is ", grandTotal)
+
+                if (product !== "") {
+                    itemsHTML += `
+                        <tr>
+                            <td>${product}</td>
+                            <td>${description}</td>
+                            <td>${quantity}</td>
+                            <td>${price} </td>
+                             <td>${total} </td>
+                        </tr>`;
+                }
+            });
+
+            if (itemsHTML === "") {
+                alert("Please add at least one product with a description!");
+                return;
+            }
+
+            const invoiceHTML = `
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+            <meta charset="utf-8">
+            <title>www.eashwarwoodcraft.in/</title>
+            <link rel="stylesheet" href="style.css" media="all" />
+            </head>
+            <body>
+            <header class="clearfix">
+            <div id="logo">
+            <img src="logo.png"style="width:350px; height:60px">
+            </div>
+            <h1> ${documentType} - ${uniqueNo} </h1>
+            <div id="company" class="clearfix">
+            <div style="text-align:left;">
+            ${o_name}
+            </div>
+            <div style="text-align:left;">
+            ${senderCompany}
+            </div>
+            <div style="text-align:left;">
+            ${o_mobile}</div>
+            <div><a href="mailto:${o_email}">${o_email}</a></div>
+            </div>
+            <div id="project" style="text-align:left ; line-height:14 px;">
+            <div>Project : Modular wooden services</div>
+            <div>Client  : ${c_name}</div>
+             <div>Address: ${clientCompany}</div>
+            <div>Email : <a href="mailto:${c_email}"> ${c_email}</a></div>
+            <div>DATE ${currenDate}</div>
+            </div>
+            </header>
+            <main>
+            <table>
+            <thead>
+            <tr>
+            <th class="service">Product</th>
+            <th class="desc">Description</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total (INR)</th>
+            </tr>
+            </thead>
+            <tbody>${itemsHTML}</tbody>
+             <tbody>
+             <tr>
+             <td colspan="4" style="text-align: right; padding-right: 60px;">SUBTOTAL</td>
+             <td class="total">${grandTotal} (INR)</td>
+             </tr>
+             <tr>
+             <td colspan="4" class="grand" style="text-align: right; padding-right: 60px;">GRAND TOTAL</td>
+             <td class="grand total">${grandTotal} (INR) </td>
+             </tr>
+            </tbody>
+            </table>
+            <p style="text-decoration:underline;">TERMS & CONDITIONS:</p>
+            <div class="terms">
+            ${terms}
+            </div>
+            <p style="text-decoration:underline;">NOTE:</p>
+            <div class="notice">
+            ${note}
+            </div>
+            <div>
+            <p>For more information and queries ,visit us our website:</p>
+            <table>
+            <tr>
+            <td><a href="http://eashwarwoodcraft.in/">www.eashwarwoodcraft.in/</a></th>
+            <td ><a href="https://api.whatsapp.com/send?phone=919871620619&amp;text=Hii! Eashwar , I wana ask something ? ">Chat with us</a></th>
+            <td><a href="tel://+91 9871620619">Click to call us.</a></th>
+            <td><a href="mailto:${o_email}">Email us</a></th>
+           </tr>
+            </table>
+            </div>
+            </main>
+            <script>
+            setTimeout(() => { window.print(); }, 500);
+            <\/script>
+            </body>
+            </html>
+            `;
+
+            // generatePDF(invoiceHTML, 'label' + '.pdf')
+
+
+
+
+            // 
+            const invoiceWindow = window.open("", "_blank");
+            if (invoiceWindow) {
+                invoiceWindow.document.open();
+                invoiceWindow.document.write(invoiceHTML);
+                invoiceWindow.document.close();
+            } else {
+                alert("Pop-up blocked! Please allow pop-ups for this site.");
+            }
+        }
+    </script>
+</body>
+
+</html>
